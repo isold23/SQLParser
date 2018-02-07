@@ -1,2 +1,2 @@
 # SQLParser
-SQLParser(sql-like parser), SQL语句解析器。
+SQLParser(sql-based parser), SQL语句解析器。
