@@ -1,10 +1,5 @@
 /*******************************************************
- Copyright (c) 2013 Baidu.com, Inc. All Rights Reserved
- @file cdp_lex.l
- @author wangliwei01(com@baidu.com)
- @date 2013/07/10 14:33:30
- @brief
- @不能使用双斜杠注释
+author isold.wang@gmail.com
 *******************************************************/ 
 
 %option noyywrap nodefault yylineno case-insensitive
@@ -17,32 +12,32 @@
 #include "expr.h"
 #include "select.h"
 
-using cdp::ItemColumn;
-using cdp::ItemData;
-using cdp::Item;
-using cdp::ItemField;
-using cdp::ItemFieldEx;
-using cdp::ItemExpr;
-using cdp::ItemSelect;
-using cdp::ItemSelectList;
-using cdp::ItemTableReference;
-using cdp::ItemTable;
-using cdp::ItemJoinList;
-using cdp::ItemJoin;
-using cdp::ItemJoinConditionList;
-using cdp::ItemWhere;
-using cdp::ItemResultList;
-using cdp::ItemStringConstant;
-using cdp::ItemIntegerConstant;
-using cdp::ItemDoubleConstant;
-using cdp::ItemResultColumn;
-using cdp::ItemParameter;
-using cdp::ItemParameterList;
-using cdp::ItemFunction;
-using cdp::ItemTableRule;
-using cdp::ItemTableRuleList;
+using longyu::ItemColumn;
+using longyu::ItemData;
+using longyu::Item;
+using longyu::ItemField;
+using longyu::ItemFieldEx;
+using longyu::ItemExpr;
+using longyu::ItemSelect;
+using longyu::ItemSelectList;
+using longyu::ItemTableReference;
+using longyu::ItemTable;
+using longyu::ItemJoinList;
+using longyu::ItemJoin;
+using longyu::ItemJoinConditionList;
+using longyu::ItemWhere;
+using longyu::ItemResultList;
+using longyu::ItemStringConstant;
+using longyu::ItemIntegerConstant;
+using longyu::ItemDoubleConstant;
+using longyu::ItemResultColumn;
+using longyu::ItemParameter;
+using longyu::ItemParameterList;
+using longyu::ItemFunction;
+using longyu::ItemTableRule;
+using longyu::ItemTableRuleList;
 
-#include "cdp_yacc_tab.h"
+#include "longyu_yacc_tab.h"
 
 #undef YY_INPUT
 #define YY_INPUT(b,r,ms)   (r = my_yyinput(b,ms))

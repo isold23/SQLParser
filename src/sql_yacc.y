@@ -1,8 +1,4 @@
-// Copyright (c) 2013 Baidu.com, Inc. All Rights Reserved
-// @file cdp_yacc.y
-// @author wangliwei01(com@baidu.com)
-// @date 2013/07/10 14:59:30
-// @brief 
+// @author isold.wang@gmail.com
 
 
 %{
@@ -16,35 +12,35 @@
 #include "expr.h"
 #include "select.h"
 
-using cdp::Parser;
-using cdp::ItemColumn;
-using cdp::ItemData;
-using cdp::Item;
-using cdp::ItemExpr;
-using cdp::ItemField;
-using cdp::ItemFieldEx;
-using cdp::ItemSelect;
-using cdp::ItemSelectList;
-using cdp::ItemTableReference;
-using cdp::ItemTable;
-using cdp::ItemJoinList;
-using cdp::ItemJoin;
-using cdp::ItemJoinConditionList;
-using cdp::ItemWhere;
-using cdp::ItemResultList;
-using cdp::ItemStringConstant;
-using cdp::ItemIntegerConstant;
-using cdp::ItemDoubleConstant;
-using cdp::ItemResultColumn;
-using cdp::ItemOperation;
-using cdp::ItemParameter;
-using cdp::ItemParameterList;
-using cdp::ItemFunction;
-using cdp::ItemTableRule;
-using cdp::ItemTableRuleList;
+using longyu::Parser;
+using longyu::ItemColumn;
+using longyu::ItemData;
+using longyu::Item;
+using longyu::ItemExpr;
+using longyu::ItemField;
+using longyu::ItemFieldEx;
+using longyu::ItemSelect;
+using longyu::ItemSelectList;
+using longyu::ItemTableReference;
+using longyu::ItemTable;
+using longyu::ItemJoinList;
+using longyu::ItemJoin;
+using longyu::ItemJoinConditionList;
+using longyu::ItemWhere;
+using longyu::ItemResultList;
+using longyu::ItemStringConstant;
+using longyu::ItemIntegerConstant;
+using longyu::ItemDoubleConstant;
+using longyu::ItemResultColumn;
+using longyu::ItemOperation;
+using longyu::ItemParameter;
+using longyu::ItemParameterList;
+using longyu::ItemFunction;
+using longyu::ItemTableRule;
+using longyu::ItemTableRuleList;
 
-using cdp::CDP_SUCC;
-using cdp::CDP_FAIL;
+using longyu::SUCC;
+using longyu::FAIL;
 
 extern Parser g_parser;
 
@@ -153,13 +149,13 @@ create_stmt:
         OPT_CREATE NAME '(' create_column_list ')' PROTOCOL NAME
         {
             $4->set_name($2);
-            if(CDP_FAIL == $4->set_protocol($7))
+            if(FAIL == $4->set_protocol($7))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
-            if(CDP_FAIL == g_parser.add_item($4))
+            if(FAIL == g_parser.add_item($4))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
         }
 ;
@@ -169,18 +165,18 @@ create_column_list :
         {
             if(NULL == ($$ = new(std::nothrow) ItemData))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
-            if(CDP_FAIL == $$->add_column($1))
+            if(FAIL == $$->add_column($1))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
         }
    	|  	create_column_list ',' create_column
    		{
-   			if(CDP_FAIL == $1->add_column($3))
+   			if(FAIL == $1->add_column($3))
    			{
-   				return CDP_FAIL;
+   				return FAIL;
    			}
    			$$ = $1;
    		}
@@ -191,14 +187,14 @@ create_column:
       	{
       		if(NULL == ($$ = new(std::nothrow) ItemColumn($1, (unsigned int)($4), false, "")))
       		{
-      			return CDP_FAIL; 
+      			return FAIL; 
       		}
       	}
     |	NAME LENGTH '(' INTEGER ')' DEFAULT STRING
         {
             if(NULL == ($$ = new(std::nothrow) ItemColumn($1, (unsigned int)($4), true, $7)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
         }
 ;
@@ -208,21 +204,21 @@ field_factor:
      	{
      		if(NULL == ($$ = new(std::nothrow) ItemField("", "", $1)))
      		{
-     			return CDP_FAIL;
+     			return FAIL;
      		}
      	}
     |	NAME '.' NAME
         {
             if(NULL == ($$ = new(std::nothrow) ItemField("", $1, $3)))
      		{
-     			return CDP_FAIL;
+     			return FAIL;
      		}
         }
     |	NAME '.' NAME '.' NAME
         {
             if(NULL == ($$ = new(std::nothrow) ItemField($1, $3, $5)))
      		{
-     			return CDP_FAIL;
+     			return FAIL;
      		}
         }
 ;
@@ -232,21 +228,21 @@ field:
      	{
      		if(NULL == ($$ = new(std::nothrow) ItemFieldEx("", "", $1)))
      		{
-     			return CDP_FAIL;
+     			return FAIL;
      		}
      	}
     |	NAME '.' NAME
         {
             if(NULL == ($$ = new(std::nothrow) ItemFieldEx("", $1, $3)))
      		{
-     			return CDP_FAIL;
+     			return FAIL;
      		}
         }
     |	NAME '.' NAME '.' NAME
         {
             if(NULL == ($$ = new(std::nothrow) ItemFieldEx($1, $3, $5)))
      		{
-     			return CDP_FAIL;
+     			return FAIL;
      		}
         }
 ;
@@ -260,7 +256,7 @@ parameter:
         {
             if(NULL == ($$ = new(std::nothrow) ItemParameter($1)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
         }
 ;
@@ -274,11 +270,11 @@ parameter_list:
         {
             if(NULL == ($$ = new(std::nothrow) ItemParameterList()))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
-            if(CDP_FAIL == $$->add_parameter($1))
+            if(FAIL == $$->add_parameter($1))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
         }
     |   parameter_list ',' parameter
@@ -297,7 +293,7 @@ function:
         {
              if(NULL == ($$ = new(std::nothrow) ItemFunction($1, $3)))
              {
-                return CDP_FAIL;
+                return FAIL;
              }     
         }
 ;
@@ -332,21 +328,21 @@ raw_expr:
         {
             if(NULL == ($$ = new(std::nothrow) ItemStringConstant($1)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
         }
     |	INTEGER
         {
             if(NULL == ($$ = new(std::nothrow) ItemIntegerConstant($1)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
         }
     |	DOUBLE
         {
             if(NULL == ($$ = new(std::nothrow) ItemDoubleConstant($1)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
         }
 ;
@@ -364,7 +360,7 @@ bit_expr:
         {
             if(NULL == ($$ = new(std::nothrow) ItemOperation($1, $2, $3)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $1->set_parent_expr($$);
             $3->set_parent_expr($$);
@@ -373,7 +369,7 @@ bit_expr:
         {
             if(NULL == ($$ = new(std::nothrow) ItemOperation($1, $2, $3)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $1->set_parent_expr($$);
             $3->set_parent_expr($$);
@@ -382,7 +378,7 @@ bit_expr:
         {
             if(NULL == ($$ = new(std::nothrow) ItemOperation($1, 1, $3)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $1->set_parent_expr($$);
             $3->set_parent_expr($$);
@@ -391,7 +387,7 @@ bit_expr:
         {
             if(NULL == ($$ = new(std::nothrow) ItemOperation($1, 2, $3)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $1->set_parent_expr($$);
             $3->set_parent_expr($$);
@@ -400,7 +396,7 @@ bit_expr:
         {
             if(NULL == ($$ = new(std::nothrow) ItemOperation($1, 3, $3)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $1->set_parent_expr($$);
             $3->set_parent_expr($$);
@@ -409,7 +405,7 @@ bit_expr:
         {
             if(NULL == ($$ = new(std::nothrow) ItemOperation($1, 4, $3)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $1->set_parent_expr($$);
             $3->set_parent_expr($$);
@@ -418,7 +414,7 @@ bit_expr:
         {
             if(NULL == ($$ = new(std::nothrow) ItemOperation($1, 5, $3)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $1->set_parent_expr($$);
             $3->set_parent_expr($$);
@@ -427,7 +423,7 @@ bit_expr:
         {
             if(NULL == ($$ = new(std::nothrow) ItemOperation($1, 6, $3)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $1->set_parent_expr($$);
             $3->set_parent_expr($$);
@@ -436,7 +432,7 @@ bit_expr:
         {
             if(NULL == ($$ = new(std::nothrow) ItemOperation($1, 7, $3)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $1->set_parent_expr($$);
             $3->set_parent_expr($$);
@@ -445,7 +441,7 @@ bit_expr:
         {
             if(NULL == ($$ = new(std::nothrow) ItemOperation($1, 9, $3)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $1->set_parent_expr($$);
             $3->set_parent_expr($$);
@@ -454,7 +450,7 @@ bit_expr:
         {
             if(NULL == ($$ = new(std::nothrow) ItemOperation($2, $3, $4)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $2->set_parent_expr($$);
             $4->set_parent_expr($$);
@@ -463,7 +459,7 @@ bit_expr:
         {
             if(NULL == ($$ = new(std::nothrow) ItemOperation($2, $3, $4)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $2->set_parent_expr($$);
             $4->set_parent_expr($$);
@@ -472,7 +468,7 @@ bit_expr:
         {
             if(NULL == ($$ = new(std::nothrow) ItemOperation($2, 1, $4)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $2->set_parent_expr($$);
             $4->set_parent_expr($$);
@@ -481,7 +477,7 @@ bit_expr:
         {
             if(NULL == ($$ = new(std::nothrow) ItemOperation($2, 2, $4)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $2->set_parent_expr($$);
             $4->set_parent_expr($$);
@@ -490,7 +486,7 @@ bit_expr:
         {
             if(NULL == ($$ = new(std::nothrow) ItemOperation($2, 3, $4)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $2->set_parent_expr($$);
             $4->set_parent_expr($$);
@@ -499,7 +495,7 @@ bit_expr:
         {
             if(NULL == ($$ = new(std::nothrow) ItemOperation($2, 4, $4)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $2->set_parent_expr($$);
             $4->set_parent_expr($$);
@@ -508,7 +504,7 @@ bit_expr:
         {
             if(NULL == ($$ = new(std::nothrow) ItemOperation($2, 5, $4)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $2->set_parent_expr($$);
             $4->set_parent_expr($$);
@@ -517,7 +513,7 @@ bit_expr:
         {
             if(NULL == ($$ = new(std::nothrow) ItemOperation($2, 6, $4)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $2->set_parent_expr($$);
             $4->set_parent_expr($$);
@@ -526,7 +522,7 @@ bit_expr:
         {
             if(NULL == ($$ = new(std::nothrow) ItemOperation($2, 7, $4)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $2->set_parent_expr($$);
             $4->set_parent_expr($$);
@@ -535,7 +531,7 @@ bit_expr:
         {
             if(NULL == ($$ = new(std::nothrow) ItemOperation($2, 9, $4)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $2->set_parent_expr($$);
             $4->set_parent_expr($$);
@@ -547,11 +543,11 @@ select_stmt:
         {
             if(NULL == ($$ = new(std::nothrow) ItemSelect($2, $4, $5, $7)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
-            if(CDP_FAIL == g_parser.add_item($$))
+            if(FAIL == g_parser.add_item($$))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
         }
 ;
@@ -561,18 +557,18 @@ select_expr_list:
         {
             if(NULL == ($$ = new(std::nothrow) ItemSelectList))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
-            if(CDP_FAIL == $$->add_column($1))
+            if(FAIL == $$->add_column($1))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
         }
     |	select_expr_list ',' select_expr
         {
-            if(CDP_FAIL == $1->add_column($3))
+            if(FAIL == $1->add_column($3))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $$ = $1;
         }
@@ -587,14 +583,14 @@ table_reference:
         {
             if(NULL == ($$ = new(std::nothrow) ItemTableReference($1)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
         }
   	|	join_list
   		{
   			if(NULL == ($$ = new(std::nothrow) ItemTableReference($1)))
   			{
-  				return CDP_FAIL;
+  				return FAIL;
   			}
   		}
 ;
@@ -604,28 +600,28 @@ table_factor:
         {
             if(NULL == ($$ = new(std::nothrow) ItemTable("", $1, "")))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
         }
     |	NAME AS NAME
         {
             if(NULL == ($$ = new(std::nothrow) ItemTable("", $1, $3)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
         }
     |	NAME '.' NAME
         {
             if(NULL == ($$ = new(std::nothrow) ItemTable($1, $3, "")))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
         }
     |	NAME '.' NAME AS NAME
         {
             if(NULL == ($$ = new(std::nothrow) ItemTable($1, $3, $5)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
         }
 ;
@@ -635,18 +631,18 @@ join_list:
         {
             if(NULL == ($$ = new(std::nothrow) ItemJoinList))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
-            if(CDP_FAIL == $$->add_column($1))
+            if(FAIL == $$->add_column($1))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
         }
     |	join_list ',' join_table
         {
-            if(CDP_FAIL == $1->add_column($3))
+            if(FAIL == $1->add_column($3))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $$ = $1;
         }
@@ -657,7 +653,7 @@ join_table:
         {
             if(NULL == ($$ = new(std::nothrow) ItemJoin($1, $3, $5)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
         }
 ;
@@ -667,18 +663,18 @@ join_condition_list:
         {
             if(NULL == ($$ = new(std::nothrow) ItemJoinConditionList))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
-            if(CDP_FAIL == $$->add_column($1, $3))
+            if(FAIL == $$->add_column($1, $3))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
         }
     |	join_condition_list AND field_factor '=' field_factor
         {
-            if(CDP_FAIL == $1->add_column($3, $5))
+            if(FAIL == $1->add_column($3, $5))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $$ = $1;
         }
@@ -693,7 +689,7 @@ opt_where:
  	{
  	    if(NULL == ($$ = new(std::nothrow) ItemWhere($2)))
  	    {
- 		return CDP_FAIL;
+ 		return FAIL;
  	    }
  	}
 ;
@@ -739,15 +735,15 @@ into_list:
             ItemResultColumn* tmp = NULL;
             if(NULL == (tmp = new(std::nothrow) ItemResultColumn($1, $3)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             if(NULL == ($$ = new(std::nothrow) ItemResultList))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
-            if(CDP_FAIL == $$->add_column(tmp))
+            if(FAIL == $$->add_column(tmp))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
         }
  	|	into_list ',' NAME '.' NAME
@@ -755,11 +751,11 @@ into_list:
  			ItemResultColumn* tmp = NULL;
             if(NULL == (tmp = new(std::nothrow) ItemResultColumn($3, $5)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
- 			if(CDP_FAIL == $1->add_column(tmp))
+ 			if(FAIL == $1->add_column(tmp))
  			{
- 				return CDP_FAIL;
+ 				return FAIL;
  			}
  			$$ = $1;
  		}
@@ -774,7 +770,7 @@ opt_table_rule:
         {
             if(NULL == ($$ = new(std::nothrow) ItemTableRule($2, $4, $5)))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
         }
 ;
@@ -788,27 +784,27 @@ table_rule_list:
         {
             if(NULL == ($$ = new(std::nothrow) ItemTableRuleList))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
-            if(CDP_FAIL == $$->add_table_rule($1))
+            if(FAIL == $$->add_table_rule($1))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
-            if(CDP_FAIL == g_parser.add_no_sql_item($$))
+            if(FAIL == g_parser.add_no_sql_item($$))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
         }
     |   table_rule_list ',' opt_table_rule
         {
-            if(CDP_FAIL == $1->add_table_rule($3))
+            if(FAIL == $1->add_table_rule($3))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
             $$ = $1;
-            if(CDP_FAIL == g_parser.add_no_sql_item($$))
+            if(FAIL == g_parser.add_no_sql_item($$))
             {
-                return CDP_FAIL;
+                return FAIL;
             }
         }
 ;
